@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <conio.h>
+#include <time.h>
+#include <stdlib.h>
+#define maxsize 100000
+
+void swapData(int [], int, int);
+void qsort(int [], int, int );
+void printSorted(int []);
+int data[maxsize], a[maxsize], i, j, section, upper=10000;
+clock_t start, finish;
+float time_spent;
+
+int main()
+{
+    time_t t;
+
+    printf("Show random number. Press any key to continue...\n");
+    getch();
+
+    for(j=0;j<maxsize;j++)
+    {
+        data[j]=j+1;
+        printf("===%d: %d\t\t", j, data[j]);
+    }
+
+	printf("\n\n\nBegin sorting number:");
+	for(section=0;section<10;section++)
+    {
+        printf("\n\n**********SECTION: %d**********\n",section);
+        
+        //Start clock
+        start = clock();
+        
+        for(j=0;j<((upper+(section*10000))&&(upper<=maxsize));j++)
+        {  
+            qsort(data,0,upper-1); 
+            //Remove "/*" at line 39 and 42 to see number sorted by section
+            /*for(i=0;i < upper; i++)
+            {
+                printf("###%d: %d\t\t", i, data[i]);
+            }*/
+        }
+        
+        //End clock
+        finish = clock();
+
+        //To calculate running time for sorting
+        time_spent = (float)(finish - start) / CLOCKS_PER_SEC;
+        
+        printf("\ni.Number of data: %d\n", upper);
+        upper=upper+10000; 
+        printf("ii.Running time: %f\n", time_spent);
+    }
+
+    printf("\n\nSORTED NUMBER\n\n");
+    //Remove "/*" at line 58 and 61 to see all 100,000 sorted number
+    /*for(i=0;i < maxsize; i++)
+    {
+        printf("###%d: %d\t\t", i, data[i]);
+    }*/
+    printf("\n");
+    return 0;
+}
+
+//To swap a[i] and a[j] 
+void swapData(int a[], int i, int j)
+{
+	int temp;
+	temp = a[i];
+	a[i] = a[j];
+	a[j] = temp;
+}
+
+//To sort arr[left]...arr[right] into increasing order
+void qsort(int a[], int left_index, int right_index)
+{
+	int left, right, pivot;
+	if(left_index >= right_index) return; 
+
+	left = left_index; 
+	right = right_index; 
+
+  //middle pivot selection
+	pivot = a[(left_index + right_index) /2]; 
+
+  // partition
+	while(left <= right)
+    {   
+		while(a[left] < pivot)
+		{
+		    left++; 
+		}
+		while(a[right] > pivot)
+        {
+            right--; 
+        }
+		if(left <= right)
+        {   
+			swapData(a,left,right); 
+			left++; 
+			right--; 
+		}
+	}
+
+    // recursion
+	qsort(a,left_index,right); 
+	qsort(a,left,right_index);
+}
